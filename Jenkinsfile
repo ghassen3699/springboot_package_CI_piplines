@@ -40,14 +40,17 @@ pipeline {
         }
       }
       steps {
-        gv.testApplication()
+        script{
+          gv.testApplication()
+        }
       }
     }
     
     stage("deploy"){
       steps {
-        
-        gv.deployApplication()
+        script{
+          gv.testApplication()
+        }        
       }
     }
     
