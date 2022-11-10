@@ -1,67 +1,43 @@
-def gv
-
-
 pipeline {
-  agent any
-  
-  environment {
-    NEW_VERSION = '1.3.0'
-    SERVER_CREDENTIALS = credentials('server-credentials-id')
-  }
-  
-  parameters {
-    choice(name:'VERSION', choices:['1.1.0', '1.1.1', '1.1.2'], description:'choice of version')
-    booleanParam(name:'executeTests', defaultValue:true, description:'the execution of tests')
-  }
-  
-  
-  stages {
-    
-    tage("init"){
-      steps {
-        script{
-          gv = load "script.groovy"
-        }
-      }
-    }
+    agent any
+    // environment{
+    //     docker-credential = credentials('7b2024bb-9e9f-4d71-93c3-1880a1bd3091')
+    // }
+    stages{
 
-    stage("build"){
-      steps {
-        script{
-          gv.buildApplication()
+        // build the project 
+        stage("build Jar"){
+            steps{
+                script{
+                    echo "building the project ...."
+                    sh 'chmod +x mvnw'
+                    sh './mvnw clean package -Dmaven.test.skip=true'
+                }
+            }
         }
-      }
-    }
-    
-    stage("test"){
-      when {
-        expression{
-          params.executeTests == true
-        }
-      }
-      steps {
-        script{
-          gv.testApplication()
-        }
-      }
-    }
-    
-    stage("deploy"){
 
-      input{
-        message "Select the environment to deploy to"
-        ok "Done"
-        parameters{
-          choice(name:'ENV', choices:['Dev', 'test', 'prod'], description:'choice of environments')
+        // // build the image 
+        // stage("build Jar"){
+        //     steps{
+        //         script{
+        //             echo "building the docker image ...."
+        //             withCredentials([usernamePassword(credentialsID: '7b2024bb-9e9f-4d71-93c3-1880a1bd3091', passwordVariable: 'PASS', usernameVariable: 'USERNAME')]){
+        //                 sh 'docker build -tag imageName'
+        //                 sh "docker login -u $USERNAME --password-stdin"
+        //                 sh 'docker push imageName'
+        //             }
+        //         }
+        //     }
+        // }
+
+        // deploy the project 
+        stage("deploy"){
+            steps{
+                script{
+                    echo "deploying the project ...." 
+                    
+                }
+            }
         }
-      }
-      steps {
-        script{
-          gv.testApplication()
-          echo "deployment to ${ENV}"
-        }        
-      }
     }
-    
-  }
 }
