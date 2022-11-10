@@ -1,17 +1,26 @@
+def gv
 pipeline {
     agent any
     // environment{
     //     docker-credential = credentials('7b2024bb-9e9f-4d71-93c3-1880a1bd3091')
     // }
+
     stages{
+
+        // init the groovy file 
+        stage("init"){
+            steps{
+                script{
+                    gv = load "script.groovy"
+                }
+            }
+        }
 
         // build the project 
         stage("build Jar"){
             steps{
                 script{
-                    echo "building the project ...."
-                    sh 'chmod +x mvnw'
-                    sh './mvnw clean package -Dmaven.test.skip=true'
+                    gv.buildProject()
                 }
             }
         }
@@ -34,7 +43,7 @@ pipeline {
         stage("deploy"){
             steps{
                 script{
-                    echo "deploying the project ...." 
+                    gv.deployProject()
                     
                 }
             }
