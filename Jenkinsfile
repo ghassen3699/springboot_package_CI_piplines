@@ -28,7 +28,7 @@ pipeline {
             steps{
                 script{
                     echo "build project image"
-                    withCredentials([usernamePassword(credentialId: 'docker-cred', passwordVariables: 'PASS', usernameVariable: 'USER')]){
+                    withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'PASS', usernameVariable: 'USER')]){
                         sh 'docker build -t ghassenkhamassi/my-app:1.2 .'
                         sh "echo $PASS | docker login -u $USER --password-stdin"
                         sh 'docker push ghassenkhamassi/my-app:1.2'
