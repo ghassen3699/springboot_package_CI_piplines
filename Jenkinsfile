@@ -29,9 +29,9 @@ pipeline {
                 script{
                     echo "build project image"
                     withCredentials([usernamePassword(credentialsId: 'docker_cred', passwordVariable: 'PASS', usernameVariable: 'USER')]){
-                        sh 'docker build -t ghassenkhamassi/my-app:1.2 .'
+                        sh 'docker build -t ghassenkhamassi/my-springboot-app:1.0 .'
                         sh "docker login -u $USER -p $PASS"
-                        sh 'docker push ghassenkhamassi/my-app:1.2'
+                        sh 'docker push ghassenkhamassi/my-springboot-app:1.0'
                     }
 
                 }
